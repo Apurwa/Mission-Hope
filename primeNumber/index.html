@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Number Checker</title>
+</head>
+<body>
+    <h1>Prime Number Checker</h1>
+    <form id="primeForm">
+        <label for="number">Enter a number:</label>
+        <input type="number" id="number" name="number" required>
+        <button type="submit">Check</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        document.getElementById("primeForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevents form from refreshing the page
+            
+            const number = document.getElementById("number").value;
+            
+            try {
+                const response = await fetch("http://127.0.0.1:9000/is_prime", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ number: Number(number) })
+                });
+
+                const result = await response.json();
+                document.getElementById("result").textContent = result.is_prime 
+                    ? `${number} is a prime number.` 
+                    : `${number} is not a prime number.`;
+
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("result").textContent = "An error occurred. Please try again.";
+            }
+        });
+    </script>
+</body>
+</html>
